@@ -3,6 +3,12 @@ const mongoose= require('mongoose');
 const bodyParser= require('body-parser');
 const port=8000;
 const app= express();
+const User = require('./models/User');
+mongoose.connect('mongodb://localhost/userData');
+
+// var userData = db/URLSearchParams.insertOne({name: "octocat", email: "octo@cat.com", password: "password"})
+// db.users.find();
+// db.users.drop();
 
 app.use(bodyParser.json());
 
