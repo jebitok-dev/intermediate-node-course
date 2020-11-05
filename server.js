@@ -1,10 +1,10 @@
 const express= require('express');
 const mongoose= require('mongoose');
 const bodyParser= require('body-parser');
-const port=8000;
+const port = 7000;
 const app= express();
 const User = require('./models/User');
-mongoose.connect('mongodb://localhost/userData');
+mongoose.connect('mongodb://localhost/userData, { useNewUrlParser: true }');
 
 // var userData = db/URLSearchParams.insertOne({name: "octocat", email: "octo@cat.com", password: "password"})
 // db.users.find();
@@ -12,17 +12,13 @@ mongoose.connect('mongodb://localhost/userData');
 
 app.use(bodyParser.json());
 
-app.listen(port, ()=>{
-	console.log(`server is listening on port:${port}`)
-})
-
 // CREATE
 app.post('/users',(req,res)=>{
   User.create(
     {
-      name: req.newData.name,
-      email: req.body.newData.email,
-      password: req.body.newData.password
+      name:req.newData.name,
+      email:req.body.newData.email,
+      password:req.body.newData.password
     },
     (err, data) => {
       if(err) {
@@ -38,8 +34,26 @@ app.post('/users',(req,res)=>{
 app.route('/users/:id')
 // READ
 .get((req,res)=>{
-  // User.findById()
+  User.findById(req.params.id, (err, data)=> {
+    if(err) {
+      res.json({
+        success: false,
+        message: err
+      })
+    } else if(!data){
+      res.json({
+        success: false,
+        message: "Not Found"
+      })
+    } else {
+      res.json({
+        success: true,
+        data: data
+      })
+    }
+  })
 })
+
 // UPDATE
 .put((req,res)=>{
   // User.findByIdAndUpdate()
@@ -47,4 +61,8 @@ app.route('/users/:id')
 // DELETE
 .delete((req,res)=>{
   // User.findByIdAndDelete()
+})
+
+app.listen(port, ()=>{
+	console.log(`server is listening on port:${port}`)
 })
