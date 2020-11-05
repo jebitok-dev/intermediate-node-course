@@ -3,12 +3,9 @@ const mongoose= require('mongoose');
 const bodyParser= require('body-parser');
 const port = 7000;
 const app= express();
-const User = require('./models/User');
-mongoose.connect('mongodb://localhost/userData, { useNewUrlParser: true }');
 
-// var userData = db/URLSearchParams.insertOne({name: "octocat", email: "octo@cat.com", password: "password"})
-// db.users.find();
-// db.users.drop();
+const User = require('./models/User');
+mongoose.connect('mongodb://localhost/userData');
 
 app.use(bodyParser.json());
 
@@ -16,17 +13,26 @@ app.use(bodyParser.json());
 app.post('/users',(req,res)=>{
   User.create(
     {
-      name:req.newData.name,
+      name:req.body.newData.name,
       email:req.body.newData.email,
       password:req.body.newData.password
     },
     (err, data) => {
       if(err) {
-        res.join({success: false, message: err})
+        res.join({
+          success: false, 
+          message: err
+        })
       } else if(!data){
-        res.json({success: false, message: "Not Found"})
+        res.json({
+          success: false, 
+          message: "Not Found"
+        })
       } else {
-        res.json({success: true, data: data}) 
+        res.json({
+          success: true,
+          data: data
+        }) 
       }
     })
 })
